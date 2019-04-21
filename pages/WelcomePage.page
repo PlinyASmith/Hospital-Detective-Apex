@@ -1,0 +1,80 @@
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="WelcomePageController" action="{!pageInitialization}">>
+	
+
+
+ <apex:form id="theForm"> 
+        <apex:pageBlock >
+
+            <apex:pageBlockButtons >
+
+            </apex:pageBlockButtons>
+
+
+            <h1>Hospital Detective</h1><br/>
+            <p></p>
+            <br/>
+
+			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualForceOther}"/> 
+
+            <h1 style="font-style:bold; color:blue;">Please login</h1>
+
+
+            <br></br>
+            <br></br>
+
+            <apex:pageBlockSection columns="4">
+
+
+
+
+    
+
+            <apex:inputText value="{!userNameEntry}" label="Username:"/>
+            <apex:inputText value="{!passwordEntry}" label="Password:"/>
+            
+             <apex:selectList size="1" label="User Type: " title="UserType" value="{!loginRoleType}">
+                 <apex:selectOptions value="{!DynamicListOfLoginRoles}"></apex:selectOptions>
+            </apex:selectList>
+
+
+
+
+
+                <apex:commandButton disabled="{!isLoginButtonDisabled}" value="Login" action="{!login}"  />
+                <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
+
+           
+			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualLoginWrong}"/>
+
+
+
+            </apex:pageBlockSection>
+
+
+
+            <br/>
+
+          
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</apex:page>

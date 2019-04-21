@@ -1,0 +1,5 @@
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="AppSchedulerPatientPageController" action="{!pageInitialization}">>
+
+
+	
+</apex:page>

@@ -1,0 +1,3 @@
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="MatchMakerPageController" action="{!nothing}">>
+	
+</apex:page>

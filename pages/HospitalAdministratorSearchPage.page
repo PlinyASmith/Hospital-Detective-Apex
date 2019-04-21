@@ -1,0 +1,41 @@
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="HospAdminSearchPageController" action="{!pageInitialization}">>
+
+
+
+
+
+
+<apex:form id="theForm"> 
+        <apex:pageBlock >
+
+
+
+
+            <h1>Hospital Detective Hospital Administrators</h1><br/>
+            <p></p>
+            <br/>
+      
+            <br/>
+
+	
+
+
+
+            <br/>
+
+          
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+
+
+
+
+
+
+
+
+	
+</apex:page>

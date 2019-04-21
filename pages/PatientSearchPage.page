@@ -1,0 +1,80 @@
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="PatientSearchPageController" action="{!pageInitialization}">>
+	
+
+
+
+<apex:form id="theForm"> 
+        <apex:pageBlock >
+
+            <apex:pageBlockButtons >
+
+            </apex:pageBlockButtons>
+
+
+            <h1>Hospital Detective</h1><br/>
+            <p></p>
+            <br/>
+            <h1>Hello {!patientUsername}</h1>
+            <br/>
+
+			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualForceOther}"/> 
+
+            <h1 style="font-style:bold; color:blue;">Enter your search criteria</h1>
+
+
+            <br></br>
+            <br></br>
+
+            <apex:pageBlockSection columns="4">
+
+
+
+
+    		
+
+            <apex:inputText value="{!location}" label="Location:"/>
+            <apex:inputText value="{!maxDistance}" label="Max Distance:"/>
+
+             <apex:selectList size="1" label="Max Distance: " title="MaxDistance" value="{!distanceSelected}">
+                 <apex:selectOptions value="{!DynamicListOfDistances}"></apex:selectOptions>
+            </apex:selectList>
+
+
+            <apex:selectList size="1" label="Procedure:" title="Procedure" value="{!procedureSelected}">
+                 <apex:selectOptions value="{!pickListValuesProcedure}"></apex:selectOptions>
+            </apex:selectList>
+
+                <apex:commandButton disabled="{!isSearchButtonDisabled}" value="Search" action="{!search}"  />
+                <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
+
+
+           
+			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualBadSearch}"/>
+
+
+
+            </apex:pageBlockSection>
+
+
+
+            <br/>
+
+          
+
+        </apex:pageBlock>
+
+    </apex:form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</apex:page>
