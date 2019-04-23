@@ -3,6 +3,37 @@
 
 
 
+
+<apex:includeScript value="/soap/ajax/29.0/connection.js"/>
+<apex:includeScript value="/soap/ajax/20.0/apex.js"/>
+
+
+
+
+
+<script>
+    var epcSubNeedsSave = false;
+    var epcNeedsSave = false;
+</script>
+
+<script>
+    function verifyDeleteEPC()
+    {
+        if (epcNeedsSave == true)
+        {
+            var clickResult = confirm('Delete unchecked EPCs and remove associated subjects?');
+            if (clickResult == true)
+            {
+                submitEPC();
+                epcNeedsSave = false;
+                return true;
+            }
+        }
+        else return false;
+    }
+</script>
+
+
 <apex:form id="theForm"> 
         <apex:pageBlock >
 
@@ -29,12 +60,14 @@
 
 
 
-
+             <apex:selectList size="1" label="Your Location: " title="PatientAddresss" value="{!patientAddressSelected}">
+                 <apex:selectOptions value="{!DynamicListofPatientLocations}"></apex:selectOptions>
+            </apex:selectList>
     		
 
-            <apex:inputText value="{!location}" label="Location:"/>
-            <apex:inputText value="{!maxDistance}" label="Max Distance:"/>
-
+<!--             <apex:inputText value="{!location}" label="Location:"/>
+ --><!--             <apex:inputText value="{!maxDistance}" label="Max Distance:"/>
+ -->
              <apex:selectList size="1" label="Max Distance: " title="MaxDistance" value="{!distanceSelected}">
                  <apex:selectOptions value="{!DynamicListOfDistances}"></apex:selectOptions>
             </apex:selectList>
@@ -56,13 +89,119 @@
             </apex:pageBlockSection>
 
 
-
             <br/>
 
           
 
-        </apex:pageBlock>
 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+<h2> Selection of Available Organisms </h2>
+                <br/>
+
+
+                <br/>
+<!--                 <apex:commandButton disabled="{!isSaveButtonDisabled}" action="{!save}" value="Submit your Organism" />
+ -->
+
+
+                <apex:actionStatus startText="Sorting..."
+                stopText="" id="sortStatus3" startStyleClass="statusStyle"/>
+                <apex:pageBlockTable value="{!blanks}" var="b" id="table3">
+
+                    <apex:column style="text-decoration:underlinroe" headervalue="Select ONE">
+                            <apex:actionsupport action="{!selectProcedure}" event="onclick" rerender="table5">  
+        -->            
+                            <input type="radio" id="{!b.radioThing}" name="<strong>selectRadio</strong>" />             
+                            <apex:param name="orgID" value="{!b.radioThing}">
+                            </apex:param>
+                            </apex:actionsupport> 
+
+                    </apex:column>
+                       
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByProcedureName}" value="Medical Procedure Name " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(procedureNameSort!='Desc','&#x25BC;', '')+if(procedureNameSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputField value="{!b.medicalProcedure.ProcedureName__c}" />
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByDistance}" value="Distance " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(distanceSort!='Desc','&#x25BC;', '')+if(distanceSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputText value="{!b.medicalProcedure.TemporaryDistanceText__c}" />
+                    </apex:column>
+                    
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByZipCode}" value="Zip Code " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(zipCodeSort!='Desc','&#x25BC;', '')+if(zipCodeSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputField value="{!b.medicalProcedure.ZipCode__c}" />
+                    </apex:column>
+         
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+
+
+
+
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByDiscountPrice}" value="Discounted Price " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(discountPriceSort!='Desc','&#x25BC;', '')+if(discountPriceSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+
+
+
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputField value="{!b.medicalProcedure.DiscountedPrice__c}" />
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByRanking}" value="Ranking " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(rankingSort!='Desc','&#x25BC;', '')+if(rankingSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputField value="{!b.medicalProcedure.ProcedureRanking__c}" />
+                   </apex:column>
+                        
+                </apex:pageBlockTable>
+
+
+
+
+
+
+        
+        </apex:pageBlock>
     </apex:form>
 
 

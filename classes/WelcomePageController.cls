@@ -20,6 +20,9 @@ public with sharing class WelcomePageController
  	public String  hospitalID {get;set;}
  	public String  insuranceName {get;set;}
  	public String  hospitalName {get;set;}
+ 	public Integer numberOfAddresses {get;set;}
+ 	//public String  patientAddressesJSON {get;set;}
+ 	//public Blob patientAddressesJSONBlob {get; set;}
  	public Map<String,String> Parameters {get;set;}
  	public Map<String,String> Headers {get;set;}
 
@@ -32,7 +35,6 @@ public with sharing class WelcomePageController
 	public String resultMessageForVisualLoginWrong {get; set;}
 	public String resultMessageForVisualForceOther {get; set;}
 	public String loginRoleType {get;set;}
-
 
 
 
@@ -88,7 +90,7 @@ public with sharing class WelcomePageController
 		//Only use if the database is empty.  You will need to change the relational link IDs for Hospital and Insurance Company
 		//for Hospital Administrators and for Insurance Administrators to the new ones
 
-		
+
 		//List<Patient__c> myPatients = new List<Patient__c>();
 		//Patient__c myPatient = new Patient__c (UserName__c = 'Pliny', Password__c = passwordString);
 		//myPatients.add(myPatient);
@@ -171,7 +173,7 @@ public with sharing class WelcomePageController
 
 			 when 'Patient'
 			 { 
-				Patient__c[] myPatientList = [SELECT ID, Name, UserName__c, Password__c FROM Patient__c WHERE UserName__c =: userNameEntry]	;
+				Patient__c[] myPatientList = [SELECT ID, Name, UserName__c, Password__c, FirstName__c, LastName__c, NumberOfAddresses__c  FROM Patient__c WHERE UserName__c =: userNameEntry]	;
 				if (myPatientList.size() > 0) 
 				{
 					Patient__c myPatient = myPatientList[0];
@@ -184,6 +186,25 @@ public with sharing class WelcomePageController
 					{
 						System.debug('logged in');
 						roleValidated = 'Patient';
+						firstName = myPatient.FirstName__c;
+						lastName = myPatient.LastName__c;
+						patientID = myPatient.Id;
+						numberOfAddresses = Integer.valueOf(myPatient.NumberOfAddresses__c);
+
+						//if (numberOfAddresses > 0)
+						//	{
+						//		PatientAddress__c[] myPatientAddressList = [SELECT ID, NameForAddress__c, Full_Address__c, Latitude__c, Longitude__c  FROM PatientAddress__c WHERE  Patient__c =: myPatient.Id];
+						//		patientAddressesJSON = JSON.serialize(myPatientAddressList);
+						//		patientAddressesJSONBlob = Blob.valueOf(patientAddressesJSON);
+						//		patientAddressesJSON = EncodingUtil.convertToHex(patientAddressesJSONBlob);
+
+
+
+
+						//		System.debug(patientAddressesJSON);
+								
+						//	}	
+
 						PageReference continuePage = makePageReferenceWithParms('PatientSearchPage');
 						return continuePage;
 					}
@@ -316,9 +337,14 @@ public with sharing class WelcomePageController
 
 
 
+
         pageref.getParameters().put('resultMessageForVisualForceOther',resultMessageForVisualForceOther);
     	pageref.getParameters().put('resultMessageForVisualLoginWrong', resultMessageForVisualLoginWrong);
     	pageref.getParameters().put('patientUsername', userNameEntry);
+
+    	if (numberOfAddresses != null) pageref.getParameters().put('numberOfAddresses', String.valueOf(numberOfAddresses));
+        //pageref.getParameters().put('patientAddressesJSON', patientAddressesJSON);
+
         return pageref;
    	}
 
@@ -350,7 +376,9 @@ public with sharing class WelcomePageController
             hospitalID = parameters.get('hospitalID');
             insuranceName = parameters.get('insuranceName');
             hospitalName = parameters.get('hospitalName');
+            if (parameters.get('numberOfAddresses') != null) numberOfAddresses = Integer.valueOf(parameters.get('numberOfAddresses'));
 
+            //patientAddressesJSON = parameters.get('patientAddressesJSON');
 
 		if (parameters.get('resultMessageForVisualForceOther') != null) 
         {
