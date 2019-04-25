@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>InsuranceAdministrator</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>InsuranceAdministrators</value>
+    </caseValues>
+    <fields>
+        <label><!-- FirstName --></label>
+        <name>FirstName__c</name>
+    </fields>
+    <fields>
+        <label><!-- InsuranceCompany --></label>
+        <name>InsuranceCompany__c</name>
+        <relationshipLabel><!-- InsuranceAdministrators --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- LastName --></label>
+        <name>LastName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Password --></label>
+        <name>Password__c</name>
+    </fields>
+    <fields>
+        <label><!-- UserName --></label>
+        <name>UserNAME__c</name>
+    </fields>
+    <startsWith>Vowel</startsWith>
+</CustomObjectTranslation>

@@ -40,7 +40,8 @@
 
 
 
-                <apex:commandButton disabled="{!isLoginButtonDisabled}" value="Login" action="{!login}"  />
+<!--                 <apex:commandButton disabled="{!isLoginButtonDisabled}" value="Login" action="{!login}"  />
+ -->                <apex:commandButton disabled="{!isLoginNEWButtonDisabled}" value="Login" action="{!loginNEW}"  />
                 <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
 
            

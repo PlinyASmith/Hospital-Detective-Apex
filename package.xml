@@ -17,6 +17,54 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>CustomLabels</members>
+        <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
+        <members>HospitalAdministrator__c</members>
+        <members>Hospital__c</members>
+        <members>InsuranceAdministrator__c</members>
+        <members>InsuranceCompany__c</members>
+        <members>MedicalProcedure__c</members>
+        <members>PatientAddress__c</members>
+        <members>PatientPhoneNumber__c</members>
+        <members>Patient__c</members>
+        <members>ProcedureReview__c</members>
+        <members>ProcedureSchedule__c</members>
+        <members>Product2</members>
+        <members>Ranking__c</members>
+        <members>Site</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomObjectTranslation</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomPageWebLink</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomPermission</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomSite</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>

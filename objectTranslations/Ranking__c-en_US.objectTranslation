@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>ProcedureRanking</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>ProcedureRankings</value>
+    </caseValues>
+    <fields>
+        <label><!-- AverageStarRatingNumber --></label>
+        <name>AverageStarRatingNumber__c</name>
+    </fields>
+    <fields>
+        <label><!-- NumberOfReviews --></label>
+        <name>NumberOfReviews__c</name>
+    </fields>
+    <fields>
+        <label><!-- SumOfAllStarRatingsNumber --></label>
+        <name>SumOfAllStarRatingsNumber__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

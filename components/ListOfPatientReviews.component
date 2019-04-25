@@ -1,0 +1,83 @@
+<apex:component controller="ListOfPatientReviewsComponentController" allowDML="true">
+
+    <apex:attribute name="thePatientID" description="patients salesforce ID"
+    type="String" required="true" assignTo="{!patientID}"/ >
+
+    <apex:attribute name="theFirstName" description="patients first name"
+    type="String" required="true" assignTo="{!firstName}"/ >
+
+    <apex:attribute name="theLastName" description="patients last name"
+    type="String" required="true" assignTo="{!lastName}"/ >
+    
+    <apex:attribute name="theRoleValidated" description="what type of user - patient, hospital administrator, or insurance administrator"
+    type="String" required="true" assignTo="{!roleValidated}"/ >
+
+    <apex:attribute name="theSearchDistance" description="How far does the user want to search"
+    type="String" required="true" assignTo="{!searchDistance}"/ >
+
+    <apex:attribute name="theSearchLocation" description="Which address is the user using from picklist"
+    type="String" required="true" assignTo="{!searchLocation}"/ >
+
+      <apex:attribute name="theSearchProcedure" description="name of the procedure from picklist"
+    type="String" required="true" assignTo="{!searchProcedure}"/ >
+
+    <apex:attribute name="theMedicalProcedureID" description="Salesforce ID of the medical procedure we are looking at"
+    type="String" required="true" assignTo="{!medicalProcedureID}"/ >
+
+    <apex:attribute name="theRankReviewID" description="Salesforce ID of the specific review the patient wants to see"
+    type="String" required="true" assignTo="{!rankReviewID}"/ >
+
+    <apex:attribute name="theSortReviewsAscendingDescending" description="How are we sorting a list"
+    type="String" required="true" assignTo="{!sortReviewsAscendingDescending}"/ >
+
+    <apex:attribute name="theInsuranceCompanyID" description="Salesforce Id of the patients insurance company"
+    type="String" required="true" assignTo="{!insuranceCompanyID}"/ >
+
+    <apex:attribute name="theInsuranceCompanyName" description="Name of the patients insurance company"
+    type="String" required="true" assignTo="{!insuranceCompanyName}"/ >
+
+    <apex:attribute name="thePatientDistanceToService" description="How far is the distance to this review"
+    type="String" required="true" assignTo="{!patientDistanceToService}"/ >
+
+    <apex:attribute name="theMedicalProcedureAverageStars" description="What rating does the procedure get"
+    type="String" required="true" assignTo="{!medicalProcedureAverageStars}"/ >
+
+    <apex:attribute name="theMedicalProcedureHospitalAddress" description="Whats the address for the medical procedure"
+    type="String" required="true" assignTo="{!medicalProcedureHospitalAddress}"/ >
+
+
+    <apex:attribute name="theUserAction" description="Whats on the bottom of the screen"
+    type="String" required="true" assignTo="{!userAction}"/ >
+
+    <apex:attribute name="theUserProfilePreference" description="Whats on the top of the screen"
+    type="String" required="true" assignTo="{!userProfilePreference}"/ >
+
+    <apex:attribute name="thePatientAge" description="How old are you"
+    type="String" required="true" assignTo="{!patientAge}"/ >
+
+    <apex:attribute name="theInsuranceCompanyLogoFileName" description="What logo should we use"
+    type="String" required="true" assignTo="{!insuranceCompanyLogoFileName}"/ >
+
+
+    
+
+
+
+    <apex:pageMessages />
+    <apex:form id="theForm"> 
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="bottom">
+
+
+
+
+            </apex:pageBlockButtons>
+
+            <h3>List of Patient Reviews</h3><br/>
+            <p></p>
+               
+
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:component>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>PatientPhoneNumber</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>PatientPhoneNumbers</value>
+    </caseValues>
+    <fields>
+        <label><!-- Default Phone Number --></label>
+        <name>Default_Phone_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Patient --></label>
+        <name>Patient__c</name>
+        <relationshipLabel><!-- PatientPhoneNumbers --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Phone Type --></label>
+        <name>PhoneType__c</name>
+    </fields>
+    <fields>
+        <label><!-- phone number --></label>
+        <name>phone_number__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
