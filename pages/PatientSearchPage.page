@@ -108,7 +108,7 @@
 
 
 
-<h2> Selection of Available Organisms </h2>
+<h2> Selection of Procedures </h2>
                 <br/>
 
 
@@ -161,7 +161,7 @@
                                 </apex:commandlink>
                             </apex:outputpanel> 
                         </apex:facet>
-                        <apex:outputField value="{!b.medicalProcedure.ZipCode__c}" />
+                        <apex:outputField value="{!b.medicalProcedure.zipcode__c}" />
                     </apex:column>
          
                     <apex:column >

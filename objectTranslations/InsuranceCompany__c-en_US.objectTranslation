@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>InsuranceCompany</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>InsuranceCompanies</value>
+    </caseValues>
+    <fields>
+        <label><!-- InsuranceCompanyLogoFileName --></label>
+        <name>InsuranceCompanyLogoFileName__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company City --></label>
+        <name>Insurance_Company_City__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Full Address --></label>
+        <name>Insurance_Company_Full_Address__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Name --></label>
+        <name>Insurance_Company_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Phone Number --></label>
+        <name>Insurance_Company_Phone_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company State --></label>
+        <name>Insurance_Company_State__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Street Direction --></label>
+        <name>Insurance_Company_Street_Direction__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Street Name --></label>
+        <name>Insurance_Company_Street_Name__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company Street Number --></label>
+        <name>Insurance_Company_Street_Number__c</name>
+    </fields>
+    <fields>
+        <label><!-- Insurance Company ZipCode --></label>
+        <name>Insurance_Company_ZipCode__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

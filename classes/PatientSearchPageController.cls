@@ -8,7 +8,6 @@ public with sharing class PatientSearchPageController
   public String  lastName {get;set;}
   public String  roleValidated  {get;set;}
   public String  patientID {get;set;}
-  public String  procedure {get;set;}
   public String  insuranceID {get;set;}
   public String  hospitalID {get;set;}
   public String  insuranceName {get;set;}
@@ -23,7 +22,7 @@ public with sharing class PatientSearchPageController
 
   public String resultMessageForVisualBadSearch {get; set;}
   public String resultMessageForVisualForceOther {get; set;}
-  public String location {get; set;}
+  //public String location {get; set;}
   public String maxDistance {get; set;}
   public Boolean isSearchButtonDisabled {get; set;}
   public Boolean isCancelButtonDisabled {get; set;}
@@ -40,6 +39,7 @@ public with sharing class PatientSearchPageController
     public List<PatientSearchPageController.SearchResultsContainer> blanks{get;set;}  // the checkbox holders for each answer
     public String selectedValue {get;set;}
     public List<MedicalProcedure__c> medicalProcedureList {get; set;}
+    public List<PatientAddress__c> patientAddressList {get;set;}
     public MedicalProcedure__c medicalProcecdure {get; set;}
 
 
@@ -66,6 +66,8 @@ public with sharing class PatientSearchPageController
 
     public String searchDistance {get;set;}
     public String searchLocation {get;set;}
+    public String  searchProcedure {get;set;}
+
 
 
 
@@ -80,6 +82,14 @@ public with sharing class PatientSearchPageController
 
 
 //**********************************************************************************************
+
+
+
+
+
+
+
+
 
 
 
@@ -102,6 +112,8 @@ public with sharing class PatientSearchPageController
           resultMessageForVisualForceOther = '';
           resultMessageForVisualBadSearch = '';
         }
+
+
 
 		getPickListValuesProcedure();
     getDynamicListOfDistances();
@@ -128,15 +140,24 @@ public with sharing class PatientSearchPageController
       Decimal myLongitude = 0;
       Decimal hospitalLatitude = 0;
       Decimal hospitalLongitude = 0;
+      Double distanceOfHospitalToAddress = 0;
 
         medicalProcedureList = [SELECT Id, DiscountedPrice__c, DiscountedPriceTEXT__c, Hospital__c, HospitaProcedurePrice__c, 
                             HospitalProcedurePriceTEXT__c, InsuranceCompany__c, InsuranceCompanyDiscount__c, InsuranceCompanyDiscountTEXT__c, 
                             ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c,
                             ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c
-                            FROM MedicalProcedure__c];
-                            //WHERE ProcedureName__c =: procedure];
+                            FROM MedicalProcedure__c
+                            WHERE ProcedureName__c =: searchProcedure];
 
+       patientAddressList = [SELECT Id, NameForAddress__c, Latitude__c, Longitude__c, Full_Address__c, Patient__c 
+                            FROM PatientAddress__c
+                            WHERE Patient__c =: patientID AND NameForAddress__c =: searchLocation];
 
+        if (patientAddressList.size() > 0)
+        {
+          myLatitute = patientAddressList[0].Latitude__c;
+          myLongitude = patientAddressList[0].Longitude__c;
+        }
         {
             blanks = new List<PatientSearchPageController.SearchResultsContainer>();
             for (MedicalProcedure__c eachValue  : medicalProcedureList)
@@ -144,9 +165,12 @@ public with sharing class PatientSearchPageController
 
                 hospitalLatitude = eachValue.ProcedureLatitude__c;
                 hospitalLongitude = eachValue.ProcedureLongitude__c;
+                distanceOfHospitalToAddress = getHospitalDistance(myLatitute, myLongitude, hospitalLatitude, hospitalLongitude);
 
-                eachValue.TemporaryDistanceText__c = '22';                //organismContainerList.add(new PickAnOrganismComponentController.organismContainer(false, eachValue));
-                if(eachValue.Available__c == true)
+                if (distanceOfHospitalToAddress < 1) eachValue.TemporaryDistanceText__c = 'less than 1 mile';
+                else if (Integer.valueOf(distanceOfHospitalToAddress) == 1) eachValue.TemporaryDistanceText__c = '1 mile';
+                 else  eachValue.TemporaryDistanceText__c = String.valueOf(Integer.valueOf(distanceOfHospitalToAddress)) + ' miles';                //organismContainerList.add(new PickAnOrganismComponentController.organismContainer(false, eachValue));
+                if(distanceOfHospitalToAddress  <  Double.valueOf(searchDistance))
                 {
                     //eachValue.Id = String.valueOf(eachValue.MedicalProcedure__c);
                     blanks.add( new PatientSearchPageController.SearchResultsContainer(!eachValue.Available__c, eachValue));
@@ -165,15 +189,19 @@ public with sharing class PatientSearchPageController
 
 
 
- public String getDistancesBetweenPatientAndProcedure() 
- {
+//**********************************************************************************************
+//      public Double getHospitalDistance (Decimal aPatientLatitude, Decimal aPatientLongitude, Decimal aHospitalLatitude, Decimal aHospitalLongitude)
+//**********************************************************************************************
+  public Double getHospitalDistance (Decimal aPatientLatitude, Decimal aPatientLongitude, Decimal aHospitalLatitude, Decimal aHospitalLongitude)
+    {
+        Location hospitalLocation =  Location.newInstance(aHospitalLatitude,  aHospitalLongitude);
+        Location patientLocation =  Location.newInstance(aPatientLatitude,  aPatientLongitude);
+        return Location.getDistance(hospitalLocation,  patientLocation,  'mi');
 
 
+     }
 
-  return '';
- }
-
-
+//**********************************************************************************************
 
 
 
@@ -203,9 +231,15 @@ public with sharing class PatientSearchPageController
 //**********************************************************************************************
 	public PageReference search ()
 	{
-		
+		  //getParms();
 
+
+      searchDistance = distanceSelected;
+      searchLocation = patientAddressSelected;
+      searchProcedure =procedureSelected;
       return makePageReference('PatientSearchPage');
+
+      
 	}
 
 
@@ -242,7 +276,6 @@ public with sharing class PatientSearchPageController
         	pickListValuesProcedure.add(new SelectOption(f.getLabel(), f.getValue()));
 
         }
-
         System.debug (pickListValuesProcedure);
         return pickListValuesProcedure;
     }
@@ -286,13 +319,13 @@ public with sharing class PatientSearchPageController
  public List<SelectOption> getDynamicListOfDistances() 
   {
       List<SelectOption> optionsDistance = new List<SelectOption>();
-      optionsDistance.add(new SelectOption('1 mile','1 mile'));
-      optionsDistance.add(new SelectOption('2 miles','2 miles'));
-      optionsDistance.add(new SelectOption('5 miles','5 miles'));
-      optionsDistance.add(new SelectOption('10 miles','10 miles'));
-      optionsDistance.add(new SelectOption('15 miles','15 miles'));
-      optionsDistance.add(new SelectOption('25 miles','25 miles'));
-      optionsDistance.add(new SelectOption('50 miles','50 miles'));
+      optionsDistance.add(new SelectOption('1','1 mile'));
+      optionsDistance.add(new SelectOption('2','2 miles'));
+      optionsDistance.add(new SelectOption('5','5 miles'));
+      optionsDistance.add(new SelectOption('10','10 miles'));
+      optionsDistance.add(new SelectOption('15','15 miles'));
+      optionsDistance.add(new SelectOption('25','25 miles'));
+      optionsDistance.add(new SelectOption('50','50 miles'));
 
 
       return optionsDistance;
@@ -340,18 +373,20 @@ public with sharing class PatientSearchPageController
 //**********************************************************************************************
   public PageReference makePageReference(String pageToNavigateTo)
   {
-    PageReference pageref ;   
+      
+
+        PageReference pageref;   
         pageref = new PageReference('/apex/'+pageToNavigateTo);
+        pageref.setRedirect(true);
+
         pageref.getParameters().put('firstName',firstName);
         pageref.getParameters().put('lastName',lastName);
         pageref.getParameters().put('roleValidated',roleValidated);
         pageref.getParameters().put('patientID',patientID);
-        pageref.getParameters().put('procedure',procedure);
         pageref.getParameters().put('insuranceID',insuranceID);
         pageref.getParameters().put('hospitalID',hospitalID);
         pageref.getParameters().put('insuranceName',insuranceName);
         pageref.getParameters().put('hospitalName',hospitalName);
-        if (numberOfAddresses != null) pageref.getParameters().put('numberOfAddresses', String.valueOf(numberOfAddresses));
 
 
         //specific to this page
@@ -359,8 +394,12 @@ public with sharing class PatientSearchPageController
         pageref.getParameters().put('resultMessageForVisualBadSearch', resultMessageForVisualBadSearch);
         pageref.getParameters().put('searchDistance',searchDistance);
         pageref.getParameters().put('searchLocation',searchLocation);
+        pageref.getParameters().put('searchProcedure',searchProcedure);
 
-        System.debug(pageref);
+
+        if (numberOfAddresses != null) pageref.getParameters().put('numberOfAddresses', String.valueOf(numberOfAddresses));
+
+        System.debug('There are the parms I send: ' + pageref);
 
         return pageref;
   }
@@ -380,7 +419,6 @@ public with sharing class PatientSearchPageController
         lastName= parameters.get('lastName');
         roleValidated = parameters.get('roleValidated');
         patientID = parameters.get('patientID');
-        procedure = parameters.get('procedure');     
         insuranceID = parameters.get('insuranceID');
         hospitalID = parameters.get('hospitalID');
         insuranceName = parameters.get('insuranceName');
@@ -389,9 +427,11 @@ public with sharing class PatientSearchPageController
 
         searchDistance = parameters.get('searchDistance');
         searchLocation = parameters.get('searchLocation');
+        searchProcedure = parameters.get('searchProcedure');     
 
-        //System.debug (patientID);
-
+         distanceSelected = searchDistance;
+         patientAddressSelected = searchLocation;
+         procedureSelected = searchProcedure;
 
   }
 
@@ -535,4 +575,3 @@ public with sharing class PatientSearchPageController
         }
     }
   }
-

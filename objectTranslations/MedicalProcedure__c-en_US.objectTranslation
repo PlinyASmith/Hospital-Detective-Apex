@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>MedicalProcedure</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>MedicalProcedures</value>
+    </caseValues>
+    <fields>
+        <label><!-- Available --></label>
+        <name>Available__c</name>
+    </fields>
+    <fields>
+        <label><!-- DiscountedPriceTEXT --></label>
+        <name>DiscountedPriceTEXT__c</name>
+    </fields>
+    <fields>
+        <label><!-- DiscountedPrice --></label>
+        <name>DiscountedPrice__c</name>
+    </fields>
+    <fields>
+        <label><!-- HospitalProcedurePrice --></label>
+        <name>HospitaProcedurePrice__c</name>
+    </fields>
+    <fields>
+        <label><!-- HospitalAddress --></label>
+        <name>HospitalAddress__c</name>
+    </fields>
+    <fields>
+        <label><!-- HospitalProcedurePriceTEXT --></label>
+        <name>HospitalProcedurePriceTEXT__c</name>
+    </fields>
+    <fields>
+        <label><!-- Hospital --></label>
+        <name>Hospital__c</name>
+        <relationshipLabel><!-- MedicalProcedures --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- InsuranceCompanyDiscountTEXT --></label>
+        <name>InsuranceCompanyDiscountTEXT__c</name>
+    </fields>
+    <fields>
+        <label><!-- InsuranceCompanyDiscount --></label>
+        <name>InsuranceCompanyDiscount__c</name>
+    </fields>
+    <fields>
+        <label><!-- InsuranceCompany --></label>
+        <name>InsuranceCompany__c</name>
+        <relationshipLabel><!-- MedicalProcedures --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- ProcedureLatitude --></label>
+        <name>ProcedureLatitude__c</name>
+    </fields>
+    <fields>
+        <label><!-- ProcedureLongitude --></label>
+        <name>ProcedureLongitude__c</name>
+    </fields>
+    <fields>
+        <label><!-- ProcedureName --></label>
+        <name>ProcedureName__c</name>
+    </fields>
+    <fields>
+        <label><!-- ProcedureRanking --></label>
+        <name>ProcedureRanking__c</name>
+        <relationshipLabel><!-- MedicalProcedures --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- TemporaryDistanceText --></label>
+        <name>TemporaryDistanceText__c</name>
+    </fields>
+    <fields>
+        <label><!-- zipcode --></label>
+        <name>zipcode__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>
