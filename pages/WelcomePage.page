@@ -1,8 +1,11 @@
-<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="WelcomePageController" action="{!pageInitialization}">>
-	
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="WelcomePageController" action="{!pageInitialization}"   title="Hospital Detective" >
+    
+    
 
 
- <apex:form id="theForm"> 
+<apex:image url="{!$Resource.HospitalDetectiveNameLogo}" style="height:100px"/>
+
+ <apex:form id="theForm" > 
         <apex:pageBlock >
 
             <apex:pageBlockButtons >
@@ -10,13 +13,13 @@
             </apex:pageBlockButtons>
 
 
-            <h1>Hospital Detective</h1><br/>
+            <h1 style="font-style:bold; font-size:6; color:gray;"> Hospital Detective</h1><br/>
             <p></p>
             <br/>
 
-			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualForceOther}"/> 
+            <apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualForceOther}"/> 
 
-            <h1 style="font-style:bold; color:blue;">Please login</h1>
+            <h1 style="font-style:bold; font-size:12; color:blue;">Please login</h1>
 
 
             <br></br>
@@ -42,10 +45,10 @@
 
 <!--                 <apex:commandButton disabled="{!isLoginButtonDisabled}" value="Login" action="{!login}"  />
  -->                <apex:commandButton disabled="{!isLoginNEWButtonDisabled}" value="Login" action="{!loginNEW}"  />
-                <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
-
+<!--                 <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
+ -->
            
-			<apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualLoginWrong}"/>
+            <apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualLoginWrong}"/>
 
 
 
@@ -67,10 +70,48 @@
 
 
 
+<apex:image url="{!$Resource.CodeDoctorsLogo}" style="height:100px"/>
+<p style="font-style:bold; font-size:12; color:red;"> The Real Code Doctors </p>
+
+        <apex:pageBlock  id="block1">
+
+            <apex:pageBlockSection id="masterSection" columns="3">
+
+            <apex:pageBlockSection id="section1" collapsible="true" title="Patients" >
+            <p>Pliny</p>
+            <p>Anali</p>
+            <p>John</p>
+            <p>Washington</p>
+             <script> twistSection(document.getElementById('{!$Component.block1.masterSection.section1}').getElementsByTagName('img')[0]) </script>
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="section2" collapsible="true" title="Insurance Administrators" >
+            <p>PlinySmith</p>
+            <p>AnaliNegrete</p>
+            <p>JohnCrissman</p>
+            <p>BobbyBobbyson</p>
+             <script> twistSection(document.getElementById('{!$Component.block1.masterSection.section2}').getElementsByTagName('img')[0]) </script>
+
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection id="section3" collapsible="true" title="Hospital Administrators" >
+            <p>Smith</p>
+            <p>Negrete</p>
+            <p>Crissman</p>
+            <script> twistSection(document.getElementById('{!$Component.block1.masterSection.section3}').getElementsByTagName('img')[0]) </script>
+
+            </apex:pageBlockSection>
+
+            </apex:pageBlockSection>
 
 
 
 
+        </apex:pageBlock>
+
+
+    
 
 
 

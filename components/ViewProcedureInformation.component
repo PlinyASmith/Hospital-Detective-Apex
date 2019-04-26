@@ -72,14 +72,24 @@
 
             <h3>View Procedure Information</h3>
 
-            <br/>
-            <p></p>
-                           <h3>View Procedure Information</h3><br/>
-            <p></p>
-    <br/><br/>
+            <p>Procedure Name: {!myMedicalProcedure.ProcedureName__c}</p>
 
-    <br/><br/>
-                               <h3>View Procedure Information</h3><br/>
+
+
+    						<p>Insurance Discounted Price: {!myMedicalProcedure.DiscountedPriceTEXT__c}</p>
+    						<p>Insurance Company: {!myMedicalProcedure.InsuranceCompanyName__c}</p>
+                            <p>Insurance Discount: {!insuranceDiscountAsText}</p>
+
+                            <p>Hospital List Price: {!myMedicalProcedure.HospitalProcedurePriceTEXT__c}</p>
+                            <p>Procedure Rating: {!myMedicalProcedure.ProcedureStars__c}</p>
+                            <p>Hospital Name: {!myMedicalProcedure.HospitalName__c}</p>
+
+                            <p>Hospital Address: {!myMedicalProcedure.HospitalAddress__c}</p>
+
+            <p>Procedure ID: {!selectProcedureIdFromPage}</p>
+
+
+
 
 
         </apex:pageBlock>
