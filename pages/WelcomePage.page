@@ -33,7 +33,7 @@
     
 
             <apex:inputText value="{!userNameEntry}" label="Username:"/>
-            <apex:inputText value="{!passwordEntry}" label="Password:"/>
+            <apex:inputSecret value="{!passwordEntry}" label="Password:"/>
             
              <apex:selectList size="1" label="User Type: " title="UserType" value="{!loginRoleType}">
                  <apex:selectOptions value="{!DynamicListOfLoginRoles}"></apex:selectOptions>

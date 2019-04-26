@@ -800,7 +800,7 @@ public PageReference logout ()
         if (firstName == null) firstName = '';
         if (lastName == null) lastName = '';
         if (roleValidated == null) roleValidated = '';
-        if (searchDistance == null) searchDistance = '';
+        if (searchDistance == null) searchDistance = '10';
         if (searchLocation == null) searchLocation = '';
         if (searchProcedure == null) searchProcedure = '';
         if (medicalProcedureID == null) medicalProcedureID = '';
