@@ -1,4 +1,4 @@
-<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="MatchMakerPageController" action="{!pageInitialization}">
+<apex:page cache="false" expires="0" showHeader="false" sidebar="false" controller="MatchMakerPageController" action="{!pageInitialization}"             title="Hospital Detective" >
     
 
 
@@ -10,7 +10,14 @@
 
 
 
-
+<style>
+.statusStyle {
+    background:url(/img/loading.gif) no-repeat 0 0;
+    padding-left:20px;
+    margin-left:10px;
+    padding-bottom:5px;
+}
+</style>   
 
 
 
@@ -65,14 +72,18 @@
                  <apex:selectOptions value="{!DynamicListOfDistances}"></apex:selectOptions>
             </apex:selectList>
 
+             <apex:selectList size="1" label="Insurance: " title="Insurance" value="{!insuranceViewChoiceSelected}">
+                 <apex:selectOptions value="{!DynamicListOfInsuranceViewChoice}"></apex:selectOptions>
+            </apex:selectList>
+
+            
+
 
             <apex:selectList size="1" label="Procedure:" title="Procedure" value="{!procedureSelected}">
                  <apex:selectOptions value="{!pickListValuesProcedure}"></apex:selectOptions>
             </apex:selectList>
 
                 <apex:commandButton disabled="{!isSearchButtonDisabled}" value="Search" action="{!search}"  />
-                <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Cancel" action="{!cancelAction}" immediate="true" html-formnovalidate="formnovalidate" />
-
 
            
             <apex:outputText style="font-style:bold; font-size:6; color:red;" value="{!resultMessageForVisualBadSearch}"/>
@@ -116,7 +127,7 @@
                 <apex:pageBlockTable value="{!blanks}" var="b" id="table3">
 
                     <apex:column style="text-decoration:underlinroe" headervalue="Select ONE">
-                            <apex:actionsupport action="{!selectProcedure}" event="onclick" rerender="table5">  
+                            <apex:actionsupport action="{!viewProcedure}" event="onclick" rerender="table5">  
         -->            
                             <input type="radio" id="{!b.radioThing}" name="<strong>selectRadio</strong>" />             
                             <apex:param name="orgID" value="{!b.radioThing}">
@@ -128,12 +139,12 @@
                     <apex:column >
                         <apex:facet name="header">
                             <apex:outputpanel >                   
-                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByProcedureName}" value="Medical Procedure Name " rerender="table3">
-                                    <apex:outputText escape="false" value="{!if(procedureNameSort!='Desc','&#x25BC;', '')+if(procedureNameSort!='Asc','&#x25B2;','')}"/> 
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByHospitalName}" value="Hospital Name " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(hospitalNameSort!='Desc','&#x25BC;', '')+if(hospitalNameSort!='Asc','&#x25B2;','')}"/> 
                                 </apex:commandlink>
                             </apex:outputpanel> 
                         </apex:facet>
-                        <apex:outputField value="{!b.medicalProcedure.ProcedureName__c}" />
+                        <apex:outputField value="{!b.medicalProcedure.HospitalName__c}" />
                     </apex:column>
                     
                     <apex:column >
@@ -161,20 +172,26 @@
                     <apex:column >
                         <apex:facet name="header">
                             <apex:outputpanel >                   
-
-
-
-
                                 <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByDiscountPrice}" value="Discounted Price " rerender="table3">
                                     <apex:outputText escape="false" value="{!if(discountPriceSort!='Desc','&#x25BC;', '')+if(discountPriceSort!='Asc','&#x25B2;','')}"/> 
                                 </apex:commandlink>
-
-
-
                             </apex:outputpanel> 
                         </apex:facet>
                         <apex:outputField value="{!b.medicalProcedure.DiscountedPrice__c}" />
                     </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByHospitalPrice}" value="Full Price " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(hospitalPriceSort!='Desc','&#x25BC;', '')+if(hospitalPriceSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet> $
+                        <apex:outputField value="{!b.medicalProcedure.HospitalProcedurePriceTEXT__c}" /> .00
+                    </apex:column>
+
+
 
                     <apex:column >
                         <apex:facet name="header">
@@ -184,10 +201,27 @@
                                 </apex:commandlink>
                             </apex:outputpanel> 
                         </apex:facet>
-                        <apex:outputField value="{!b.medicalProcedure.ProcedureRanking__c}" />
+                        <apex:outputField value="{!b.medicalProcedure.ProcedureStars__c}" />
                    </apex:column>
+
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:outputpanel >                   
+                                <apex:commandlink status="sortStatus3" style="text-decoration:underline" action="{!sortByInsuranceCompanyName}" value="Insurance Company " rerender="table3">
+                                    <apex:outputText escape="false" value="{!if(inuranceCompanyNameSort!='Desc','&#x25BC;', '')+if(inuranceCompanyNameSort!='Asc','&#x25B2;','')}"/> 
+                                </apex:commandlink>
+                            </apex:outputpanel> 
+                        </apex:facet>
+                        <apex:outputField value="{!b.medicalProcedure.InsuranceCompanyName__c}" />
+                   </apex:column>
+
+
                         
                 </apex:pageBlockTable>
+
+
+
 
             <apex:pageBlockSection columns="5">
 
@@ -195,6 +229,7 @@
                 <apex:commandButton disabled="{!isViewProcedureButtonDisabled}" value="View Information" action="{!viewProcedure}" />
                 <apex:commandButton disabled="{!isScheduleAppointmentButtonDisabled}" value="Schedule Appointment" action="{!scheduleAppointment}" />
                 <apex:commandButton disabled="{!isViewReviewsButtonDisabled}" value="Read Reviews" action="{!viewListOfPatientReviews}" />
+                <apex:commandButton disabled="{!isCancelButtonDisabled}" value="Logout" action="{!logout}" immediate="true" />
 
 
            

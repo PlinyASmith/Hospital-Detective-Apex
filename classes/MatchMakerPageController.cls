@@ -22,6 +22,8 @@ public with sharing class MatchMakerPageController
 
 
 
+    public String selectProcedureIdFromPage{get;set;}
+
     public String  medicalProcedureID{get;set;}
     public String  rankReviewID{get;set;}
     public String  sortReviewsAscendingDescending{get;set;}
@@ -53,6 +55,7 @@ public with sharing class MatchMakerPageController
     public String procedureSelected {get; set;}
     public String distanceSelected {get;set;}
     public String patientAddressSelected {get;set;}
+    public String insuranceViewChoiceSelected {get;set;}
 
 
 
@@ -75,10 +78,12 @@ public with sharing class MatchMakerPageController
 
 
 
-    public String procedureNameSort {get; set;}
+    public String hospitalNameSort {get; set;}
     public String distanceSort {get; set;}
     public String zipCodeSort {get; set;}
     public String discountPriceSort {get; set;}
+    public String hospitalPriceSort {get; set;}
+    public String inuranceCompanyNameSort {get;set;}
     public String rankingSort {get; set;}
 
     public static Boolean ascending = true;
@@ -87,6 +92,7 @@ public with sharing class MatchMakerPageController
     public String searchDistance {get;set;}
     public String searchLocation {get;set;}
     public String  searchProcedure {get;set;}
+    public String searchinsuranceViewChoice{get;set;}
 
 
 
@@ -369,14 +375,16 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
 
         medicalProcedureList = [SELECT Id, DiscountedPrice__c, DiscountedPriceTEXT__c, Hospital__c, HospitaProcedurePrice__c, 
                             HospitalProcedurePriceTEXT__c, InsuranceCompany__c, InsuranceCompanyDiscount__c, InsuranceCompanyDiscountTEXT__c, 
-                            ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c,
-                            ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c
+                            ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c, ProcedureStars__c,
+                            ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c, HospitalName__c, InsuranceCompanyName__c
                             FROM MedicalProcedure__c
                             WHERE ProcedureName__c =: searchProcedure];
 
        patientAddressList = [SELECT Id, NameForAddress__c, Latitude__c, Longitude__c, Full_Address__c, Patient__c 
                             FROM PatientAddress__c
                             WHERE Patient__c =: patientID AND NameForAddress__c =: searchLocation];
+
+        Patient__c tempPatient = [SELECT Id, InsuranceCompany__c, InsuranceCompanyName__c FROM Patient__c WHERE Id =: patientID LIMIT 1];                  
 
         if (patientAddressList.size() > 0)
         {
@@ -396,9 +404,15 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
                 else if (Integer.valueOf(distanceOfHospitalToAddress) == 1) eachValue.TemporaryDistanceText__c = '1 mile';
                  else  eachValue.TemporaryDistanceText__c = String.valueOf(Integer.valueOf(distanceOfHospitalToAddress)) + ' miles';                //organismContainerList.add(new PickAnOrganismComponentController.organismContainer(false, eachValue));
                 if(distanceOfHospitalToAddress  <  Double.valueOf(searchDistance))
-                {
-                    //eachValue.Id = String.valueOf(eachValue.MedicalProcedure__c);
-                    blanks.add( new MatchMakerPageController.SearchResultsContainer(!eachValue.Available__c, eachValue));
+                 {
+
+                    if (searchInsuranceViewChoice == 'All Insurance') 
+                    {
+                        blanks.add( new MatchMakerPageController.SearchResultsContainer(!eachValue.Available__c, eachValue));
+                    }               
+                    else if (eachValue.InsuranceCompanyName__c.equals(tempPatient.InsuranceCompanyName__c))
+                        blanks.add( new MatchMakerPageController.SearchResultsContainer(!eachValue.Available__c, eachValue));
+
 
                 }
 
@@ -430,22 +444,15 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
 
 
 
-//**********************************************************************************************
-//      public PageReference selectProcedure ()
-//**********************************************************************************************
-  public PageReference selectProcedure ()
-  {
-    
 
 
+public PageReference logout ()
+{
 
-
-      return null;
-  }
-
-
-//**********************************************************************************************
-
+      userAction = 'DoNotShowReviews';
+      userProfilePreference = 'DoNotShowProfile';
+      return makePageReference('WelcomePage');
+}
 
 
 
@@ -461,6 +468,8 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
       searchDistance = distanceSelected;
       searchLocation = patientAddressSelected;
       searchProcedure =procedureSelected;
+      searchInsuranceViewChoice = insuranceViewChoiceSelected;
+
       userAction = 'DoNotShowReviews';
       userProfilePreference = 'DoNotShowProfile';
       return makePageReference('MatchMakerPage');
@@ -498,7 +507,20 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
     public PageReference viewProcedure()
     {
         userAction = 'ViewProcedureInformation';
-      return makePageReference('MatchMakerPage');
+
+        selectProcedureIdFromPage= System.currentPagereference().getParameters().get('orgID');
+        if (selectProcedureIdFromPage != null)
+              return makePageReference('MatchMakerPage');
+
+        //MedicalProcedure__c tempMedicalProcedure = [SELECT Id, DiscountedPrice__c, DiscountedPriceTEXT__c, Hospital__c, HospitaProcedurePrice__c, 
+        //                    HospitalProcedurePriceTEXT__c, InsuranceCompany__c, InsuranceCompanyDiscount__c, InsuranceCompanyDiscountTEXT__c, 
+        //                    ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c,
+        //                    ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c, HospitalName__c, InsuranceCompanyName__c
+        //                    FROM MedicalProcedure__c
+        //                    WHERE ProcedureName__c =: selectProcedureIdFromPage LIMIT 1];
+
+
+      return null;
     }
 //**********************************************************************************************
 
@@ -512,6 +534,14 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
     {
          userAction = 'scheduleAppointment';
 
+        selectProcedureIdFromPage= System.currentPagereference().getParameters().get('orgID');
+        //MedicalProcedure__c tempMedicalProcedure = [SELECT Id, DiscountedPrice__c, DiscountedPriceTEXT__c, Hospital__c, HospitaProcedurePrice__c, 
+        //                    HospitalProcedurePriceTEXT__c, InsuranceCompany__c, InsuranceCompanyDiscount__c, InsuranceCompanyDiscountTEXT__c, 
+        //                    ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c,
+        //                    ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c, HospitalName__c, InsuranceCompanyName__c
+        //                    FROM MedicalProcedure__c
+        //                    WHERE ProcedureName__c =: selectProcedureIdFromPage LIMIT 1];
+
       return makePageReference('MatchMakerPage');
     }
 //**********************************************************************************************
@@ -524,7 +554,20 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
 
     public PageReference viewListOfPatientReviews()
     {
+
         userAction = 'ListOfPatientReviews';
+
+    
+        selectProcedureIdFromPage= System.currentPagereference().getParameters().get('orgID');
+        //MedicalProcedure__c tempMedicalProcedure = [SELECT Id, DiscountedPrice__c, DiscountedPriceTEXT__c, Hospital__c, HospitaProcedurePrice__c, 
+        //                    HospitalProcedurePriceTEXT__c, InsuranceCompany__c, InsuranceCompanyDiscount__c, InsuranceCompanyDiscountTEXT__c, 
+        //                    ProcedureName__c, ProcedureRanking__c, Zipcode__c, Available__c, TemporaryDistanceText__c,
+        //                    ProcedureLatitude__c, ProcedureLongitude__c, HospitalAddress__c, HospitalName__c, InsuranceCompanyName__c
+        //                    FROM MedicalProcedure__c
+        //                    WHERE ProcedureName__c =: selectProcedureIdFromPage LIMIT 1];
+
+
+
 
       return makePageReference('MatchMakerPage');
     }
@@ -580,6 +623,24 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
     }
 //**********************************************************************************************
 
+
+
+
+
+//**********************************************************************************************
+//       public List<SelectOption> getDynamicListOfDistances() 
+//**********************************************************************************************
+ public List<SelectOption> getDynamicListOfInsuranceViewChoice() 
+  {
+      List<SelectOption> optionsInsuranceViewChoice = new List<SelectOption>();
+      optionsInsuranceViewChoice.add(new SelectOption('My Insurance', 'My Insurance'));
+      optionsInsuranceViewChoice.add(new SelectOption('All Insurance', 'All Insurance'));
+
+
+
+      return optionsInsuranceViewChoice;
+    } // end of DynamicListOfLoginRoles
+//**********************************************************************************************
 
 
 
@@ -671,6 +732,7 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         pageref.getParameters().put('searchDistance',searchDistance);
         pageref.getParameters().put('searchLocation',searchLocation);
         pageref.getParameters().put('searchProcedure',searchProcedure);
+        pageref.getParameters().put('searchInsuranceViewChoice',searchInsuranceViewChoice);
 
         pageref.getParameters().put('medicalProcedureID',medicalProcedureID);
         pageref.getParameters().put('rankReviewID',rankReviewID);
@@ -679,7 +741,10 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         pageref.getParameters().put('insuranceCompanyName',insuranceCompanyName);
         pageref.getParameters().put('patientDistanceToService',patientDistanceToService);
         pageref.getParameters().put('medicalProcedureAverageStars',medicalProcedureAverageStars);
-        pageref.getParameters().put('InsuranceCompanyLogoFileName', InsuranceCompanyLogoFileName);
+        pageref.getParameters().put('InsuranceCompanyLogoFileName', insuranceCompanyLogoFileName);
+        pageref.getParameters().put('selectProcedureIdFromPage', selectProcedureIdFromPage);
+
+        
 
         pageref.getParameters().put('userAction',userAction);
         pageref.getParameters().put('userProfilePreference',userProfilePreference);
@@ -715,7 +780,8 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
 
         searchDistance = parameters.get('searchDistance');
         searchLocation = parameters.get('searchLocation');
-        searchProcedure = parameters.get('searchProcedure');     
+        searchProcedure = parameters.get('searchProcedure');  
+        searchInsuranceViewChoice = parameters.get('searchInsuranceViewChoice');   
 
         medicalProcedureID = parameters.get('medicalProcedureID');
         rankReviewID = parameters.get('rankReviewID');
@@ -724,7 +790,8 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         insuranceCompanyName = parameters.get('insuranceCompanyName');
         patientDistanceToService = parameters.get('patientDistanceToService');
         medicalProcedureAverageStars = parameters.get('medicalProcedureAverageStars');
-        InsuranceCompanyLogoFileName = parameters.get ('InsuranceCompanyLogoFileName');
+        insuranceCompanyLogoFileName = parameters.get ('InsuranceCompanyLogoFileName');
+        selectProcedureIdFromPage = parameters.get ('selectProcedureIdFromPage');
 
         userAction = parameters.get('userAction');
         userProfilePreference = parameters.get('userProfilePreference');
@@ -744,13 +811,16 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         if (patientDistanceToService == null) patientDistanceToService = '';
         if (medicalProcedureAverageStars == null) medicalProcedureAverageStars = '';
         if (medicalProcedureHospitalAddress == null) medicalProcedureHospitalAddress = '';
+        if (searchInsuranceViewChoice == null) searchInsuranceViewChoice = 'My insurance';
         if (userAction == null) userAction = 'DoNotShowReviews';
         if (userProfilePreference == null) userProfilePreference = 'DoNotShowProfile';
-        if (InsuranceCompanyLogoFileName == null) InsuranceCompanyLogoFileName = 'GenericHealthInsuranceLogo_Banner.jpg';
+        if (InsuranceCompanyLogoFileName == null) InsuranceCompanyLogoFileName = 'GenericHealthInsuranceLogo_Banner';
+        if (selectProcedureIdFromPage == null) selectProcedureIdFromPage = 'a001U000007Cci1';
 
          distanceSelected = searchDistance;
          patientAddressSelected = searchLocation;
          procedureSelected = searchProcedure;
+         insuranceViewChoiceSelected = searchInsuranceViewChoice;
 
 
 
@@ -791,11 +861,11 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
 
 
 
-    public pageReference sortByProcedureName() 
+    public pageReference sortByHospitalName() 
     {
-        procedureNameSort = (procedureNameSort == null ? 'Desc' : procedureNameSort);
-        procedureNameSort = (procedureNameSort == 'Desc' ? 'Asc' : 'Desc');
-        PageReference returnedPage = sortByValue('ProcedureName__c', procedureNameSort);
+        hospitalNameSort = (hospitalNameSort == null ? 'Desc' : hospitalNameSort);
+        hospitalNameSort = (hospitalNameSort == 'Desc' ? 'Asc' : 'Desc');
+        PageReference returnedPage = sortByValue('HospitalName__c', hospitalNameSort);
         return returnedPage;
     }
 
@@ -823,17 +893,33 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         PageReference returnedPage = sortByValue('DiscountedPriceTEXT__c', discountPriceSort);
         return returnedPage;
     }
+
+     public pageReference sortByHospitalPrice() 
+    {
+
+        hospitalPriceSort = (hospitalPriceSort == null ? 'Desc' : hospitalPriceSort);
+        hospitalPriceSort = (hospitalPriceSort == 'Desc' ? 'Asc' : 'Desc');
+        PageReference returnedPage = sortByValue('HospitalProcedurePriceTEXT__c', hospitalPriceSort);
+        return returnedPage;
+    }
+
+    public pageReference sortByInsuranceCompanyName()
+  {
+        inuranceCompanyNameSort = (inuranceCompanyNameSort == null ? 'Desc' : inuranceCompanyNameSort);
+        inuranceCompanyNameSort = (inuranceCompanyNameSort == 'Desc' ? 'Asc' : 'Desc');
+        PageReference returnedPage = sortByValue('InsuranceCompanyName__c', inuranceCompanyNameSort);
+        return returnedPage;
+    }
+
+    
+
     public pageReference sortByRanking() 
     {
         rankingSort = (rankingSort == null ? 'Desc' : rankingSort);
         rankingSort = (rankingSort == 'Desc' ? 'Asc' : 'Desc');
         PageReference returnedPage = sortByValue('ProcedureRanking__c', rankingSort);
         return returnedPage;
-    }
-
-
-    
-
+   }
 
 
 
@@ -857,31 +943,27 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
         public Boolean selected {get; set;}
         public String procedureTextId {get; set;}
         public String salesForceID {get; set;}
-        public Integer radioThing {get; set;}
+        public String radioThing {get; set;}
+        public String fieldToSort {get;set;}
+        public String stars {get;set;}
 
 
-        // Implement the compareTo() method
-        public Integer compareTo(Object compareTo) 
-        {
-
-                if (MatchMakerPageController.fieldToSort == 'MedicalProcedure__c')
-                {
-                    SearchResultsContainer compareToTitle = (SearchResultsContainer)compareTo;
-                    if ((Decimal)medicalProcedure.get(MatchMakerPageController.fieldToSort) == (Decimal)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return -1;
-                    if ((Decimal)medicalProcedure.get(MatchMakerPageController.fieldToSort) > (Decimal)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return MatchMakerPageController.ascending ? 1 : -1;
-                    return MatchMakerPageController.ascending ? -1 : 1;
-                }
 
 
-                else
-                {
-                    SearchResultsContainer compareToTitle = (SearchResultsContainer)compareTo;
-                    if ((String)medicalProcedure.get(MatchMakerPageController.fieldToSort) == (String)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return -1;
-                    if ((String)medicalProcedure.get(MatchMakerPageController.fieldToSort) > (String)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return MatchMakerPageController.ascending ? 1 : -1;
-                    return MatchMakerPageController.ascending ? -1 : 1;
-                }
 
+
+       public Integer compareTo(Object compareTo) {
+                
+  
+
+                SearchResultsContainer compareToTitle = (SearchResultsContainer)compareTo;
+                if ((String)medicalProcedure.get(MatchMakerPageController.fieldToSort) == (String)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return -1;
+                if ((String)medicalProcedure.get(MatchMakerPageController.fieldToSort) > (String)compareToTitle.medicalProcedure.get(MatchMakerPageController.fieldToSort)) return MatchMakerPageController.ascending ? 1 : -1;
+                return MatchMakerPageController.ascending ? -1 : 1;
+   
         }
+
+
 
 
         public SearchResultsContainer (Boolean transferSelected, MedicalProcedure__c transferMedicalProcedure) 
@@ -890,7 +972,15 @@ public Component.Apex.pageBlock getDynamicProfileComponent()
             medicalProcedure = transferMedicalProcedure;
             procedureTextId = medicalProcedure.Id;
             salesForceID = String.valueOf(medicalProcedure.Id);
-            radioThing = 22;
+            radioThing = medicalProcedure.Id;
+            fieldToSort = MatchMakerPageController.fieldToSort;
+
+
+            //if (Integer.valueOf(medicalProcedure.ProcedureStars__c) <= 1) stars ='★';
+            // if (Integer.valueOf(medicalProcedure.ProcedureStars__c) <= 2) stars ='★★';
+            //  if (Integer.valueOf(medicalProcedure.ProcedureStars__c) <= 3) stars ='★★★';
+            //   if (Integer.valueOf(medicalProcedure.ProcedureStars__c) <= 4) stars ='★★★★';
+            //    if (Integer.valueOf(medicalProcedure.ProcedureStars__c) <= 4.7) stars ='★★★★★';
 
             selected = transferSelected;
 
